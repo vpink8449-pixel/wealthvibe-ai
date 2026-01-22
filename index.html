@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WealthVibe AI – Maximize Engagement</title>
+<title>WealthVibe AI – Maximize Revenue</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -14,7 +14,6 @@
   --text-main: #eaeaea;       
   --text-secondary: #b0b0b0;  
   --ai-bg: rgba(212,175,55,0.05); 
-  --ad-bg: #1a1c21;           
 }
 
 *{box-sizing:border-box}
@@ -95,7 +94,6 @@ button:hover{
 
 .result{margin-top:15px;font-weight:600}
 
-/* AI panel hover glow and scrollable for more engagement */
 .ai{
   margin-top:15px;
   padding:15px;
@@ -103,7 +101,7 @@ button:hover{
   background: var(--ai-bg);
   font-size:.9rem;
   transition: all 0.3s ease;
-  max-height:200px; /* Scrollable to increase session time */
+  max-height:200px; 
   overflow-y:auto;
 }
 
@@ -120,20 +118,7 @@ button:hover{
 }
 
 .score.update{
-  transform: scale(1.2); /* Micro-interaction for engagement */
-}
-
-.ad{
-  height:90px;
-  background: var(--ad-bg);
-  border:2px dashed #333;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#777;
-  margin:25px 0;
-  font-size:.9rem;
+  transform: scale(1.2);
 }
 
 footer{
@@ -143,15 +128,17 @@ footer{
   padding:20px;
 }
 
-/* Mobile responsiveness */
 @media(max-width:600px){
   header h1{font-size:2rem}
   .card{padding:18px}
   input,button{padding:10px}
 }
 </style>
-</head>
 
+<!-- ===== Load Google AdSense ===== -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</head>
 <body>
 
 <header>
@@ -161,8 +148,18 @@ footer{
 
 <div class="container">
 
-<!-- ===== TOP AD: High visibility above the fold ===== -->
-<div class="ad">Ad Space – Top Banner</div>
+<!-- ===== TOP AD (Above the Fold) ===== -->
+<div class="card">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="1111111111"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
 <!-- ===== Wealth Score Card ===== -->
 <div class="card">
@@ -176,13 +173,21 @@ footer{
   <h2>🤖 AI Financial Advisor</h2>
   <p style="opacity:.8">Click below multiple times to see dynamic insights and predictions.</p>
   <button onclick="runAI()">Generate AI Advice</button>
-  <div id="aiResponse" class="ai">
-    AI response will appear here.
-  </div>
+  <div id="aiResponse" class="ai">AI response will appear here.</div>
 </div>
 
 <!-- ===== MID PAGE AD ===== -->
-<div class="ad">Ad Space – Mid Page</div>
+<div class="card">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="2222222222"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
 <!-- ===== Savings Calculator ===== -->
 <div class="card">
@@ -214,7 +219,17 @@ footer{
 </div>
 
 <!-- ===== BOTTOM AD ===== -->
-<div class="ad">Ad Space – Bottom Banner</div>
+<div class="card">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="3333333333"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
 </div>
 
@@ -233,7 +248,7 @@ function addHustle(){
   hustles.push({n,i});
   localStorage.setItem("hustles", JSON.stringify(hustles));
   hName.value = hIncome.value = "";
-  update(); // Encourage re-interaction to trigger ads
+  update();
 }
 
 // ===== Wealth Score & AI Insights =====
@@ -242,24 +257,18 @@ function update(){
   const y = +years.value || 0;
   let hustleTotal = hustles.reduce((a,b)=>a+b.i,0);
 
-  // Display total side income (behavioral hook)
   hOutput.innerText = "Total Side Income: $"+hustleTotal.toLocaleString()+"/month";
 
-  // AI micro-insights
   hAI.innerText = hustleTotal > 2000
     ? "AI Insight: Your side income shows strong potential. Adjust inputs to see score changes!"
     : "AI Insight: Scaling your top hustle could increase income. Try adding another hustle!";
 
-  // Wealth Score Calculation
-  let score = Math.min(100, Math.floor(
-    (m*0.03)+(y*4)+(hustleTotal*0.02)
-  ));
+  let score = Math.min(100,Math.floor((m*0.03)+(y*4)+(hustleTotal*0.02)));
   const scoreEl = document.getElementById("score");
   scoreEl.innerText = score;
   scoreEl.classList.add("update");
-  setTimeout(()=>scoreEl.classList.remove("update"), 300); // Micro-animation
+  setTimeout(()=>scoreEl.classList.remove("update"), 300);
 
-  // Score description (engagement + curiosity)
   let text =
     score>80?"Elite trajectory! Keep adjusting to see your score jump."
     :score>60?"Strong foundation. Try adding more side hustles to increase."
@@ -268,9 +277,8 @@ function update(){
   scoreText.innerText = "AI Assessment: "+text;
 }
 
-update(); // Initial call
+update();
 
-// ===== AI Panel Logic =====
 function runAI(){
   const m = +monthly.value || 0;
   const y = +years.value || 0;
@@ -296,6 +304,7 @@ ${advice}
 
 </body>
 </html>
+
 
 
 
