@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WealthVibe AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --accent: #00ffd5;
+  --bg: #0b0f14;
+  --card: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: radial-gradient(circle at top, #10232a, #05070a);
+  color: #eaeaea;
+}
+
+header {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2.4rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+header p {
+  opacity: 0.75;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+h2 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+
+input, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: none;
+  background: #05070a;
+  color: #fff;
+  border: 1px solid var(--border);
+}
+
+button {
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+button:hover { opacity: 0.9; }
+
+.result {
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+.ai-box {
+  margin-top: 15px;
+  padding: 15px;
+  border-left: 4px solid var(--accent);
+  background: rgba(0,255,213,0.05);
+  font-size: 0.9rem;
+}
+
+.ad {
+  height: 90px;
+  border: 2px dashed #333;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  margin: 25px 0;
+}
+
+canvas {
+  width: 100%;
+  max-height: 220px;
+}
+
+footer {
+  text-align: center;
+  opacity: 0.5;
+  padding: 20px;
+  font-size: 0.8rem;
+}
+
+@media(max-width:600px){
+  header h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>WealthVibe AI</h1>
+  <p>Luxury tools for smarter money decisions</p>
+</header>
+
+<div class="container">
+
+<div class="ad">Ad Space – Premium Banner</div>
+
+<!-- SAVINGS -->
+<div class="card">
+<h2>💰 Savings Calculator</h2>
+
+<label>Monthly Savings ($)</label>
+<input id="monthly" type="number">
+
+<label>Years</label>
+<input id="years" type="number">
+
+<button onclick="calcSavings()">Calculate</button>
+
+<div id="savingsResult" class="result"></div>
+<div id="savingsAI" class="ai-box"></div>
+</div>
+
+<div class="ad">Ad Space – Mid Page</div>
+
+<!-- SIDE HUSTLES -->
+<div class="card">
+<h2>🚀 Side Hustle Tracker</h2>
+
+<label>Hustle Name</label>
+<input id="hustleName">
+
+<label>Monthly Income ($)</label>
+<input id="hustleIncome" type="number">
+
+<button onclick="addHustle()">Add Hustle</button>
+
+<div id="hustleOutput" class="result"></div>
+<canvas id="chart"></canvas>
+
+<div id="hustleAI" class="ai-box"></div>
+</div>
+
+<div class="ad">Ad Space – Bottom Banner</div>
+
+</div>
+
+<footer>
+© 2026 WealthVibe AI — Built for financial elevation
+</footer>
+
+<script>
+let hustles = JSON.parse(localStorage.getItem("hustles")) || [];
+
+function calcSavings(){
+  const m = +monthly.value;
+  const y = +years.value;
+  if(!m || !y) return;
+  const total = m * 12 * y;
+  savingsResult.innerText = "Total Savings: $" + total.toLocaleString();
+
+  let insight = total > 50000
+    ? "You are building wealth faster than most users."
+    : "Increasing savings by 10% could significantly boost long-term results.";
+
+  savingsAI.innerText = "AI Insight: " + insight;
+}
+
+function addHustle(){
+  const name = hustleName.value;
+  const income = +hustleIncome.value;
+  if(!name || !income) return;
+
+  hustles.push({name, income});
+  localStorage.setItem("hustles", JSON.stringify(hustles));
+  hustleName.value = hustleIncome.value = "";
+  renderHustles();
+}
+
+function renderHustles(){
+  let total = hustles.reduce((a,b)=>a+b.income,0);
+  hustleOutput.innerHTML = `Total Monthly Income: $${total.toLocaleString()}`;
+  hustleAI.innerText =
+    total > 2000
+    ? "AI Insight: Your side income could replace a full-time salary."
+    : "AI Insight: Scaling your top hustle could double income.";
+
+  drawChart();
+}
+
+function drawChart(){
+  const c = document.getElementById("chart");
+  const ctx = c.getContext("2d");
+  c.width = c.offsetWidth;
+  c.height = 200;
+  ctx.clearRect(0,0,c.width,c.height);
+
+  let max = Math.max(...hustles.map(h=>h.income),1);
+  hustles.forEach((h,i)=>{
+    let barHeight = (h.income/max)*160;
+    ctx.fillStyle = "#00ffd5";
+    ctx.fillRect(30+i*60, 180-barHeight, 40, barHeight);
+    ctx.fillStyle="#aaa";
+    ctx.fillText(h.name, 30+i*60, 195);
+  });
+}
+
+renderHustles();
+</script>
+
+</body>
+</html>
