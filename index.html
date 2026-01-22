@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WealthVibe AI</title>
+<title>WealthVibe AI – Maximize Engagement</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -95,7 +95,7 @@ button:hover{
 
 .result{margin-top:15px;font-weight:600}
 
-/* AI panel hover glow */
+/* AI panel hover glow and scrollable for more engagement */
 .ai{
   margin-top:15px;
   padding:15px;
@@ -103,8 +103,8 @@ button:hover{
   background: var(--ai-bg);
   font-size:.9rem;
   transition: all 0.3s ease;
-  max-height:200px;
-  overflow-y:auto; /* Scrollable for longer content */
+  max-height:200px; /* Scrollable to increase session time */
+  overflow-y:auto;
 }
 
 .ai:hover{
@@ -120,7 +120,7 @@ button:hover{
 }
 
 .score.update{
-  transform: scale(1.2);
+  transform: scale(1.2); /* Micro-interaction for engagement */
 }
 
 .ad{
@@ -133,6 +133,7 @@ button:hover{
   justify-content:center;
   color:#777;
   margin:25px 0;
+  font-size:.9rem;
 }
 
 footer{
@@ -160,30 +161,30 @@ footer{
 
 <div class="container">
 
-<!-- Ad: Top Banner -->
+<!-- ===== TOP AD: High visibility above the fold ===== -->
 <div class="ad">Ad Space – Top Banner</div>
 
-<!-- Wealth Score Card -->
+<!-- ===== Wealth Score Card ===== -->
 <div class="card">
 <h2>💎 Wealth Score</h2>
 <div id="score" class="score">—</div>
-<div id="scoreText" class="ai">Enter your data to generate your Wealth Score.</div>
+<div id="scoreText" class="ai">Enter your data to generate your Wealth Score. Adjust your inputs multiple times to see score jump!</div>
 </div>
 
-<!-- AI Panel -->
+<!-- ===== AI Financial Advisor ===== -->
 <div class="card">
   <h2>🤖 AI Financial Advisor</h2>
-  <p style="opacity:.8">Get personalized insights based on your financial profile.</p>
+  <p style="opacity:.8">Click below multiple times to see dynamic insights and predictions.</p>
   <button onclick="runAI()">Generate AI Advice</button>
   <div id="aiResponse" class="ai">
     AI response will appear here.
   </div>
 </div>
 
-<!-- Ad: Mid Page -->
+<!-- ===== MID PAGE AD ===== -->
 <div class="ad">Ad Space – Mid Page</div>
 
-<!-- Savings Calculator -->
+<!-- ===== Savings Calculator ===== -->
 <div class="card">
 <h2>💰 Savings Calculator</h2>
 
@@ -196,7 +197,7 @@ footer{
 <button onclick="update()">Update Profile</button>
 </div>
 
-<!-- Side Hustle Tracker -->
+<!-- ===== Side Hustle Tracker ===== -->
 <div class="card">
 <h2>🚀 Side Hustle Tracker</h2>
 
@@ -212,13 +213,13 @@ footer{
 <div id="hAI" class="ai"></div>
 </div>
 
-<!-- Ad: Bottom Banner -->
+<!-- ===== BOTTOM AD ===== -->
 <div class="ad">Ad Space – Bottom Banner</div>
 
 </div>
 
 <footer>
-© 2026 WealthVibe AI • Maximize Engagement & Ad Revenue
+© 2026 WealthVibe AI • Optimized for Engagement & Ad Revenue
 </footer>
 
 <script>
@@ -232,7 +233,7 @@ function addHustle(){
   hustles.push({n,i});
   localStorage.setItem("hustles", JSON.stringify(hustles));
   hName.value = hIncome.value = "";
-  update();
+  update(); // Encourage re-interaction to trigger ads
 }
 
 // ===== Wealth Score & AI Insights =====
@@ -241,13 +242,13 @@ function update(){
   const y = +years.value || 0;
   let hustleTotal = hustles.reduce((a,b)=>a+b.i,0);
 
-  // Display total side income
+  // Display total side income (behavioral hook)
   hOutput.innerText = "Total Side Income: $"+hustleTotal.toLocaleString()+"/month";
 
-  // AI insight based on side hustle income
+  // AI micro-insights
   hAI.innerText = hustleTotal > 2000
-    ? "AI Insight: Your side income shows strong potential."
-    : "AI Insight: Scaling your top hustle could increase income.";
+    ? "AI Insight: Your side income shows strong potential. Adjust inputs to see score changes!"
+    : "AI Insight: Scaling your top hustle could increase income. Try adding another hustle!";
 
   // Wealth Score Calculation
   let score = Math.min(100, Math.floor(
@@ -256,19 +257,18 @@ function update(){
   const scoreEl = document.getElementById("score");
   scoreEl.innerText = score;
   scoreEl.classList.add("update");
-  setTimeout(()=>scoreEl.classList.remove("update"), 300);
+  setTimeout(()=>scoreEl.classList.remove("update"), 300); // Micro-animation
 
-  // Score text
+  // Score description (engagement + curiosity)
   let text =
-    score>80?"Elite trajectory. You’re outperforming most users."
-    :score>60?"Strong foundation with accelerating momentum."
-    :score>40?"Solid start. Strategic optimizations could unlock growth."
-    :"Early stage. Consistency will improve outcomes.";
-
+    score>80?"Elite trajectory! Keep adjusting to see your score jump."
+    :score>60?"Strong foundation. Try adding more side hustles to increase."
+    :score>40?"Solid start. Experiment with inputs to improve your score faster."
+    :"Early stage. Interact more to see your Wealth Score grow!";
   scoreText.innerText = "AI Assessment: "+text;
 }
 
-update();
+update(); // Initial call
 
 // ===== AI Panel Logic =====
 function runAI(){
@@ -278,8 +278,8 @@ function runAI(){
 
   const projectedWealth = (m*12 + hustleTotal*12)*y;
   const advice = projectedWealth > 100000
-    ? "You are on track to reach your wealth goals. Focus on scaling your top income sources."
-    : "Consider increasing monthly savings or adding higher ROI side hustles to accelerate growth.";
+    ? "You are on track to reach your wealth goals. Adjust inputs to see how to improve even faster!"
+    : "Consider increasing monthly savings or adding high-ROI side hustles. Click multiple times for new insights.";
 
   document.getElementById("aiResponse").innerText = `
 Based on your current profile:
@@ -296,5 +296,6 @@ ${advice}
 
 </body>
 </html>
+
 
 
