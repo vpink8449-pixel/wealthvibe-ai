@@ -117,12 +117,26 @@ footer{
 
 <div class="ad">Ad Space – Premium Banner</div>
 
+<!-- Wealth Score Card -->
 <div class="card">
 <h2>💎 Wealth Score</h2>
 <div id="score" class="score">—</div>
 <div id="scoreText" class="ai">Enter your data to generate your Wealth Score.</div>
 </div>
 
+<!-- AI Panel (placeholder) -->
+<div class="card">
+  <h2>🤖 AI Financial Advisor</h2>
+  <p style="opacity:.8">
+    Get personalized insights based on your financial profile.
+  </p>
+  <button onclick="runAI()">Generate AI Advice</button>
+  <div id="aiResponse" class="ai">
+    AI response will appear here.
+  </div>
+</div>
+
+<!-- Savings Calculator -->
 <div class="card">
 <h2>💰 Savings Calculator</h2>
 
@@ -137,6 +151,7 @@ footer{
 
 <div class="ad">Ad Space – Mid Page</div>
 
+<!-- Side Hustle Tracker -->
 <div class="card">
 <h2>🚀 Side Hustle Tracker</h2>
 
@@ -161,6 +176,7 @@ footer{
 </footer>
 
 <script>
+// Side Hustle Logic
 let hustles=JSON.parse(localStorage.getItem("hustles"))||[];
 
 function addHustle(){
@@ -173,6 +189,7 @@ function addHustle(){
   update();
 }
 
+// Wealth Score & AI Insights Logic
 function update(){
   const m=+monthly.value;
   const y=+years.value;
@@ -199,7 +216,22 @@ function update(){
 }
 
 update();
+
+// AI Panel Placeholder Logic
+function runAI(){
+  const response = `
+Based on your current savings rate and income streams,
+you are positioned for steady long-term growth.
+
+AI Recommendation:
+• Increase savings by 5–10% if possible
+• Focus on scaling your highest ROI side hustle
+• Maintain consistency — your trajectory is positive
+  `;
+  document.getElementById("aiResponse").innerText = response;
+}
 </script>
 
 </body>
 </html>
+
