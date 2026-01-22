@@ -3,63 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WealthVibe AI | Luxury Financial Tools</title>
+    <title>Elite Savings Planner | Future Wealth Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0a0a0b; color: #e5e7eb; font-family: 'Inter', sans-serif; }
-        .luxury-gradient { background: linear-gradient(135deg, #b8860b 0%, #ffd700 100%); }
-        .ad-slot { border: 2px dashed #333; height: 100px; display: flex; align-items: center; justify-content: center; color: #555; margin: 20px 0; border-radius: 8px; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f3f6fb; }
+        .sofi-blue { color: #0052ff; }
+        .sofi-bg { background-color: #0052ff; }
+        .slider { -webkit-appearance: none; width: 100%; height: 6px; background: #e2e8f0; border-radius: 5px; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #0052ff; cursor: pointer; border-radius: 50%; border: 3px solid white; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+        .ad-zone { border: 1px dashed #cbd5e1; background: #ffffff; color: #94a3b8; text-align: center; padding: 20px; border-radius: 12px; margin: 20px 0; font-size: 0.8rem; }
     </style>
 </head>
-<body class="p-6">
-    <div class="max-w-xl mx-auto">
-        <div class="ad-slot">AD REVENUE SPACE (HEADER)</div>
+<body class="p-4">
 
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold luxury-gradient bg-clip-text text-transparent">WealthVibe AI</h1>
-            <p class="text-gray-400 mt-2">Professional Grade Financial Growth Tracking</p>
-        </header>
+    <div class="max-w-4xl mx-auto mt-10">
+        <div class="ad-zone">SPONSORED BANKING OFFERS (AD SPACE)</div>
 
-        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl border border-gray-800">
-            <h2 class="text-xl font-semibold mb-6">High-Yield Savings Calculator</h2>
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row">
             
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm mb-2">Initial Deposit ($)</label>
-                    <input type="number" id="deposit" value="5000" class="w-full bg-gray-800 p-3 rounded-lg border border-gray-700 outline-none focus:border-yellow-500">
-                </div>
-                <div>
-                    <label class="block text-sm mb-2">Monthly Contribution ($)</label>
-                    <input type="number" id="monthly" value="200" class="w-full bg-gray-800 p-3 rounded-lg border border-gray-700 outline-none focus:border-yellow-500">
-                </div>
-                <div>
-                    <label class="block text-sm mb-2">Annual Interest Rate (%)</label>
-                    <input type="number" id="rate" value="5.0" class="w-full bg-gray-800 p-3 rounded-lg border border-gray-700 outline-none focus:border-yellow-500">
+            <div class="p-8 md:w-1/2 border-r border-gray-100">
+                <h1 class="text-2xl font-800 mb-6 sofi-blue">Savings Calculator</h1>
+                
+                <div class="space-y-8">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="font-semibold text-gray-700">Initial Deposit</label>
+                            <span class="sofi-blue font-bold" id="display-deposit">$10,000</span>
+                        </div>
+                        <input type="range" id="deposit" min="0" max="100000" step="1000" value="10000" class="slider">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="font-semibold text-gray-700">Monthly Contribution</label>
+                            <span class="sofi-blue font-bold" id="display-monthly">$500</span>
+                        </div>
+                        <input type="range" id="monthly" min="0" max="5000" step="50" value="500" class="slider">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="font-semibold text-gray-700">Years to Save</label>
+                            <span class="sofi-blue font-bold" id="display-years">5 Years</span>
+                        </div>
+                        <input type="range" id="years" min="1" max="40" step="1" value="5" class="slider">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="font-semibold text-gray-700">APY (%)</label>
+                            <span class="sofi-blue font-bold" id="display-rate">4.5%</span>
+                        </div>
+                        <input type="range" id="rate" min="0.1" max="10" step="0.1" value="4.5" class="slider">
+                    </div>
                 </div>
             </div>
 
-            <button onclick="calculate()" class="w-full luxury-gradient text-black font-bold py-4 rounded-xl mt-8 hover:opacity-90 transition">Calculate Growth</button>
+            <div class="p-8 md:w-1/2 sofi-bg text-white flex flex-col justify-center items-center text-center">
+                <p class="text-blue-100 uppercase tracking-widest text-sm font-bold mb-2">Estimated Balance</p>
+                <h2 class="text-6xl font-extrabold mb-4" id="total-balance">$44,534</h2>
+                
+                <div class="w-full h-px bg-blue-400 my-6"></div>
+                
+                <div class="grid grid-cols-2 gap-4 w-full">
+                    <div>
+                        <p class="text-blue-200 text-xs">Total Contributions</p>
+                        <p class="text-xl font-bold" id="total-contributions">$40,000</p>
+                    </div>
+                    <div>
+                        <p class="text-blue-200 text-xs">Interest Earned</p>
+                        <p class="text-xl font-bold text-green-300" id="total-interest">$4,534</p>
+                    </div>
+                </div>
 
-            <div id="result" class="mt-8 text-center text-2xl font-bold text-yellow-500 hidden">
-                Estimated Total: <span id="total">$0.00</span>
+                <button class="mt-10 bg-white text-blue-600 font-bold py-3 px-8 rounded-full hover:bg-blue-50 transition shadow-lg">
+                    Find Best High-Yield Rates
+                </button>
             </div>
         </div>
 
-        <div class="ad-slot">AD REVENUE SPACE (FOOTER)</div>
+        <div class="ad-zone">CREDIT CARD PARTNERS (AD SPACE)</div>
+
+        <div class="mt-12 text-gray-600 text-sm leading-relaxed px-4">
+            <h3 class="font-bold text-gray-800 text-lg mb-2">How to Use This Savings Calculator</h3>
+            <p>To maximize your wealth, interest rates (APY) matter. A standard bank might offer 0.01% APY, but a high-yield savings account (HYSA) can offer over 4.00%. Use this tool to see how much more you can earn by switching to a professional-grade account.</p>
+        </div>
     </div>
 
     <script>
-        function calculate() {
-            let p = parseFloat(document.getElementById('deposit').value);
-            let pmt = parseFloat(document.getElementById('monthly').value);
-            let r = parseFloat(document.getElementById('rate').value) / 100 / 12;
-            let n = 12 * 5; // Calculated for 5 years
-            
-            let futureValue = p * Math.pow(1 + r, n) + pmt * ((Math.pow(1 + r, n) - 1) / r);
-            
-            document.getElementById('result').classList.remove('hidden');
-            document.getElementById('total').innerText = '$' + futureValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const inputs = ['deposit', 'monthly', 'years', 'rate'];
+        
+        function update() {
+            const p = parseFloat(document.getElementById('deposit').value);
+            const pmt = parseFloat(document.getElementById('monthly').value);
+            const t = parseFloat(document.getElementById('years').value);
+            const r = parseFloat(document.getElementById('rate').value) / 100 / 12;
+            const n = t * 12;
+
+            // Display updates
+            document.getElementById('display-deposit').innerText = '$' + p.toLocaleString();
+            document.getElementById('display-monthly').innerText = '$' + pmt.toLocaleString();
+            document.getElementById('display-years').innerText = t + ' Years';
+            document.getElementById('display-rate').innerText = (r * 12 * 100).toFixed(1) + '%';
+
+            // Formula for Compound Interest with Monthly Contributions
+            // A = P(1+r)^n + PMT * [((1+r)^n - 1) / r]
+            const futureValue = p * Math.pow(1 + r, n) + pmt * ((Math.pow(1 + r, n) - 1) / r);
+            const totalContributed = p + (pmt * n);
+            const interestEarned = futureValue - totalContributed;
+
+            document.getElementById('total-balance').innerText = '$' + Math.round(futureValue).toLocaleString();
+            document.getElementById('total-contributions').innerText = '$' + Math.round(totalContributed).toLocaleString();
+            document.getElementById('total-interest').innerText = '$' + Math.round(interestEarned).toLocaleString();
         }
+
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', update);
+        });
+
+        // Initialize
+        update();
     </script>
 </body>
 </html>
