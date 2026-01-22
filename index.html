@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WealthVibe AI – Luxury Dashboard</title>
+<title>WealthVibe AI – Ultimate Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -40,7 +40,7 @@ button:hover{box-shadow:0 0 18px rgba(212,175,55,0.7);transform:translateY(-2px)
 .hustle-card:hover{background: rgba(212,175,55,0.15);transform:translateY(-2px);}
 .progress-container{height:6px;background: rgba(255,255,255,0.1);border-radius:6px;margin-top:6px;}
 .progress{height:100%;border-radius:6px;background: var(--accent);transition: width 0.6s ease;}
-span.sliderValue{display:block;margin-top:4px;font-weight:600;}
+.sliderValue{display:block;margin-top:4px;font-weight:600;}
 footer{text-align:center;opacity:.5;font-size:.85rem;padding:25px;}
 @media(max-width:700px){header h1{font-size:2.2rem}.card{padding:22px}input,button{padding:10px}}
 </style>
@@ -61,7 +61,7 @@ footer{text-align:center;opacity:.5;font-size:.85rem;padding:25px;}
 <h2>💎 Wealth Score</h2>
 <div id="score" class="score">0</div>
 <div id="scoreText" class="ai">Enter your data to see your Wealth Score rise.</div>
-<canvas id="wealthChart" height="150"></canvas>
+<canvas id="wealthChart" height="180"></canvas>
 </div>
 
 <!-- AI Panel -->
@@ -72,10 +72,9 @@ footer{text-align:center;opacity:.5;font-size:.85rem;padding:25px;}
 <div id="aiResponse" class="ai">AI insights will appear here.</div>
 </div>
 
-<!-- Savings Calculator with Sliders -->
+<!-- Savings & Sliders -->
 <div class="card">
 <h2>💰 Savings & Goal Simulator</h2>
-
 <label>Monthly Savings ($)</label>
 <input id="monthly" type="range" min="0" max="10000" step="50" value="1000">
 <span id="monthlyVal" class="sliderValue">$1000</span>
@@ -153,17 +152,23 @@ function animateScore(target){
   },15);
 }
 
-// Generate Wealth Chart
+// Generate Wealth Chart with Comparison
 function generateWealthChart(monthly, years, hustleTotal){
   const ctx = document.getElementById('wealthChart').getContext('2d');
-  const labels=[]; const data=[]; let total=0;
-  for(let y=1;y<=years;y++){
+  const labels = [];
+  const currentData = [];
+  const maxData = [];
+  let total = 0;
+  let maxTotal = 0;
+
+  for(let y=1; y<=years; y++){
     total += monthly*12 + hustleTotal*12;
+    maxTotal += 10000*12 + 5000*12;
     labels.push(`Year ${y}`);
-    data.push(total);
+    currentData.push(total);
+    maxData.push(maxTotal);
   }
 
-  // Goal line
   const goalValue = +goal.value || null;
   const goalData = goalValue ? labels.map((_,i)=>{
     return Math.min(goalValue, (i+1)*(goalValue/years));
@@ -172,10 +177,14 @@ function generateWealthChart(monthly, years, hustleTotal){
   if(window.wealthChart) window.wealthChart.destroy();
   window.wealthChart = new Chart(ctx,{
     type:'line',
-    data:{labels, datasets:[
-      {label:'Projected Wealth ($)', data, borderColor:'rgba(212,175,55,0.9)', backgroundColor:'rgba(212,175,55,0.2)', tension:0.4, pointRadius:5, pointBackgroundColor:'gold'},
-      goalData ? {label:'Wealth Goal', data:goalData, borderColor:'rgba(255,215,0,0.8)', borderDash:[8,4], pointRadius:0, fill:false} : null
-    ].filter(Boolean)},
+    data:{
+      labels,
+      datasets:[
+        {label:'Current Trajectory', data:currentData, borderColor:'rgba(212,175,55,0.9)', backgroundColor:'rgba(212,175,55,0.2)', tension:0.4, pointRadius:5, pointBackgroundColor:'gold'},
+        {label:'Maximum Potential', data:maxData, borderColor:'rgba(255,215,0,0.6)', borderDash:[5,5], pointRadius:0, fill:false},
+        goalData ? {label:'Wealth Goal', data:goalData, borderColor:'rgba(0,200,255,0.8)', borderDash:[8,4], pointRadius:0, fill:false} : null
+      ].filter(Boolean)
+    },
     options:{
       plugins:{
         legend:{labels:{color:'#eaeaea'}},
@@ -185,11 +194,12 @@ function generateWealthChart(monthly, years, hustleTotal){
     }
   });
 
-  // AI feedback for goal
+  // Goal insights
   if(goalValue){
-    const projectedTotal = data[data.length-1];
+    const projectedTotal = currentData[currentData.length-1];
     const yearsNeeded = Math.ceil(goalValue / ((monthly+hustleTotal)*12));
-    scoreText.innerText += `\nGoal Insight: At your current savings & hustles, you will reach $${goalValue.toLocaleString()} in ~${yearsNeeded} years.`;
+    scoreText.innerText = "AI Assessment: " + scoreText.innerText.split("AI Assessment: ")[1] + 
+      `\nGoal Insight: At current trajectory, you reach $${goalValue.toLocaleString()} in ~${yearsNeeded} years.\nMax potential shows you could accelerate even faster.`;
   }
 }
 
@@ -263,3 +273,4 @@ update();
 </script>
 </body>
 </html>
+
