@@ -2,15 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>WealthVibe AI – Premium Dashboard</title>
+<title>WealthVibe AI – Luxury Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-
-<!-- Chart.js for trajectory + sparklines -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 :root {
   --accent: #d4af37;
@@ -32,7 +27,8 @@ header p{opacity:.75;color:var(--text-secondary);margin-top:5px;}
 .card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(212,175,55,0.18);}
 h2{color:var(--accent);margin-top:0;font-family:'Playfair Display',serif;font-size:1.6rem;}
 label{font-size:.85rem;margin-top:12px;display:block;}
-input,button{width:100%;padding:12px;border-radius:12px;margin-top:8px;background:var(--bg);color:var(--text-main);border:1px solid var(--border);font-size:1rem;}
+input[type=range]{width:100%;margin-top:8px;}
+input[type=number],button{width:100%;padding:12px;border-radius:12px;margin-top:8px;background:var(--bg);color:var(--text-main);border:1px solid var(--border);font-size:1rem;}
 button{background:var(--accent);color:#000;font-weight:600;margin-top:15px;cursor:pointer;transition:all 0.35s ease;}
 button:hover{box-shadow:0 0 18px rgba(212,175,55,0.7);transform:translateY(-2px);}
 .result{margin-top:15px;font-weight:600;}
@@ -44,6 +40,7 @@ button:hover{box-shadow:0 0 18px rgba(212,175,55,0.7);transform:translateY(-2px)
 .hustle-card:hover{background: rgba(212,175,55,0.15);transform:translateY(-2px);}
 .progress-container{height:6px;background: rgba(255,255,255,0.1);border-radius:6px;margin-top:6px;}
 .progress{height:100%;border-radius:6px;background: var(--accent);transition: width 0.6s ease;}
+span.sliderValue{display:block;margin-top:4px;font-weight:600;}
 footer{text-align:center;opacity:.5;font-size:.85rem;padding:25px;}
 @media(max-width:700px){header h1{font-size:2.2rem}.card{padding:22px}input,button{padding:10px}}
 </style>
@@ -75,13 +72,24 @@ footer{text-align:center;opacity:.5;font-size:.85rem;padding:25px;}
 <div id="aiResponse" class="ai">AI insights will appear here.</div>
 </div>
 
-<!-- Savings Calculator -->
+<!-- Savings Calculator with Sliders -->
 <div class="card">
-<h2>💰 Savings Calculator</h2>
+<h2>💰 Savings & Goal Simulator</h2>
+
 <label>Monthly Savings ($)</label>
-<input id="monthly" type="number">
+<input id="monthly" type="range" min="0" max="10000" step="50" value="1000">
+<span id="monthlyVal" class="sliderValue">$1000</span>
+
+<label>Total Side Hustle Income ($)</label>
+<input id="hustleSlider" type="range" min="0" max="5000" step="50" value="0">
+<span id="hustleVal" class="sliderValue">$0</span>
+
 <label>Years</label>
-<input id="years" type="number">
+<input id="years" type="number" value="5">
+
+<label>Wealth Goal ($)</label>
+<input id="goal" type="number" placeholder="e.g., 100000">
+
 <button onclick="update()">Update Profile</button>
 </div>
 
@@ -108,6 +116,22 @@ footer{text-align:center;opacity:.5;font-size:.85rem;padding:25px;}
 // Hustle data
 let hustles = JSON.parse(localStorage.getItem("hustles")) || [];
 
+// Elements
+const monthlySlider = document.getElementById("monthly");
+const monthlyVal = document.getElementById("monthlyVal");
+const hustleSlider = document.getElementById("hustleSlider");
+const hustleVal = document.getElementById("hustleVal");
+
+// Slider updates
+monthlySlider.addEventListener("input",()=>{
+  monthlyVal.innerText="$"+(+monthlySlider.value).toLocaleString();
+  update();
+});
+hustleSlider.addEventListener("input",()=>{
+  hustleVal.innerText="$"+(+hustleSlider.value).toLocaleString();
+  update();
+});
+
 // Add Hustle
 function addHustle(){
   const n = hName.value.trim();
@@ -122,32 +146,54 @@ function addHustle(){
 // Animate Wealth Score
 function animateScore(target){
   let current = 0;
-  const step = target > 100 ? 10 : 1;
+  const step = target>100?10:1;
   const interval = setInterval(()=>{
-    if(current >= target){document.getElementById("score").innerText = target; clearInterval(interval);}
-    else {current += step; if(current>target) current=target; document.getElementById("score").innerText=current;}
+    if(current >= target){document.getElementById("score").innerText=target; clearInterval(interval);}
+    else {current+=step; if(current>target)current=target; document.getElementById("score").innerText=current;}
   },15);
 }
 
-// Wealth Trajectory Chart
+// Generate Wealth Chart
 function generateWealthChart(monthly, years, hustleTotal){
   const ctx = document.getElementById('wealthChart').getContext('2d');
-  const labels = []; const data=[];
-  let total=0;
+  const labels=[]; const data=[]; let total=0;
   for(let y=1;y<=years;y++){
     total += monthly*12 + hustleTotal*12;
     labels.push(`Year ${y}`);
     data.push(total);
   }
+
+  // Goal line
+  const goalValue = +goal.value || null;
+  const goalData = goalValue ? labels.map((_,i)=>{
+    return Math.min(goalValue, (i+1)*(goalValue/years));
+  }) : null;
+
   if(window.wealthChart) window.wealthChart.destroy();
   window.wealthChart = new Chart(ctx,{
     type:'line',
-    data:{labels, datasets:[{label:'Projected Wealth ($)', data, borderColor:'rgba(212,175,55,0.9)', backgroundColor:'rgba(212,175,55,0.2)', tension:0.4, pointRadius:5, pointBackgroundColor:'gold'}]},
-    options:{plugins:{legend:{display:false}, tooltip:{callbacks:{label:function(ctx){return "$"+ctx.parsed.y.toLocaleString();}}}}, scales:{y:{beginAtZero:true,ticks:{color:'#eaeaea'}},x:{ticks:{color:'#eaeaea'}}}}
+    data:{labels, datasets:[
+      {label:'Projected Wealth ($)', data, borderColor:'rgba(212,175,55,0.9)', backgroundColor:'rgba(212,175,55,0.2)', tension:0.4, pointRadius:5, pointBackgroundColor:'gold'},
+      goalData ? {label:'Wealth Goal', data:goalData, borderColor:'rgba(255,215,0,0.8)', borderDash:[8,4], pointRadius:0, fill:false} : null
+    ].filter(Boolean)},
+    options:{
+      plugins:{
+        legend:{labels:{color:'#eaeaea'}},
+        tooltip:{callbacks:{label:function(ctx){return "$"+ctx.parsed.y.toLocaleString();}}}
+      },
+      scales:{y:{beginAtZero:true,ticks:{color:'#eaeaea'}},x:{ticks:{color:'#eaeaea'}}}
+    }
   });
+
+  // AI feedback for goal
+  if(goalValue){
+    const projectedTotal = data[data.length-1];
+    const yearsNeeded = Math.ceil(goalValue / ((monthly+hustleTotal)*12));
+    scoreText.innerText += `\nGoal Insight: At your current savings & hustles, you will reach $${goalValue.toLocaleString()} in ~${yearsNeeded} years.`;
+  }
 }
 
-// Generate sparklines
+// Generate Sparklines
 function generateSparklines(){
   hustles.forEach((h,index)=>{
     const ctx = document.getElementById(`sparkline-${index}`)?.getContext('2d');
@@ -165,9 +211,9 @@ function generateSparklines(){
 
 // Update Function
 function update(){
-  const m = +monthly.value || 0;
+  const m = +monthlySlider.value || 0;
   const y = +years.value || 0;
-  let hustleTotal = hustles.reduce((a,b)=>a+b.i,0);
+  const hustleTotal = +hustleSlider.value + hustles.reduce((a,b)=>a+b.i,0);
 
   // Render hustles
   hOutput.innerHTML = hustles.map((h,index)=>{
@@ -181,23 +227,19 @@ function update(){
     </div>`;
   }).join("");
 
-  // AI side hustle insight
   hAI.innerText = hustleTotal>2000
     ?"AI Insight: Your side income shows strong potential to replace a full-time salary."
     :"AI Insight: Scaling your top hustle could significantly increase income.";
 
-  // Animate score
   let score = Math.min(100, Math.floor((m*0.03)+(y*4)+(hustleTotal*0.02)));
   animateScore(score);
 
-  // Assessment text
-  let text=score>80?"Elite wealth trajectory. You’re outperforming most users."
+  let text = score>80?"Elite wealth trajectory. You’re outperforming most users."
     :score>60?"Strong financial foundation with accelerating momentum."
     :score>40?"Solid start. Strategic optimizations could unlock faster growth."
     :"Early stage. Consistency will dramatically improve outcomes.";
-  scoreText.innerText="AI Assessment: "+text;
+  scoreText.innerText = "AI Assessment: "+text;
 
-  // Charts
   generateWealthChart(m,y,hustleTotal);
   generateSparklines();
 }
@@ -219,9 +261,5 @@ AI Recommendation:
 // Initial load
 update();
 </script>
-
 </body>
 </html>
-
-
-
